@@ -9,8 +9,10 @@ const bcrypt = require('bcrypt');
 const app = express();
 app.use(bodyParser.json());
 
+const router = express.Router();
+
 // Rute untuk menambahkan pengguna baru
-app.post('/register', (req, res) => {
+router.post('/register', (req, res) => {
   const { nama, email, role, password, mata_pelajaran, nohp, kualifikasi, alamat, foto_profil } = req.body;
 
   if (!nama || !email || !role || !password) {
@@ -49,7 +51,7 @@ app.post('/register', (req, res) => {
   });
 });
 
-app.post('/forgot', async (req, res) => {
+router.post('/forgot', async (req, res) => {
   const { email } = req.body;
   
   const query = 'SELECT email FROM users WHERE email = ?';
@@ -66,7 +68,7 @@ app.post('/forgot', async (req, res) => {
 });
 
 
-app.post('/booking', async (req, res) => {
+router.post('/booking', async (req, res) => {
   const { id_siswa, id_guru, mata_pelajaran, tanggal, status } = req.body;
   const query = 'INSERT INTO booking (id_siswa, id_guru,mata_pelajaran, tanggal, status) VALUES (?,?,?,?,?)';
   db.query(query, [id_siswa, id_guru, mata_pelajaran, tanggal, status], (err, results) => {
@@ -78,7 +80,7 @@ app.post('/booking', async (req, res) => {
   });
 });
 
-app.post('/jadwal', (req, res) => {
+router.post('/jadwal', (req, res) => {
   const { id_guru, tanggal } = req.body;
   const query = 'INSERT INTO jadwal (id_guru,tanggal) VALUES (?,?)';
   db.query(query, [id_guru, tanggal], (err, result) => {
@@ -89,7 +91,7 @@ app.post('/jadwal', (req, res) => {
   });
 });
 
-app.get('/jadwal', (req, res) => {
+router.get('/jadwal', (req, res) => {
   const { id_guru } = req.body;
   const query = 'SELECT * FROM jadwal WHERE id_guru = ?';
   db.query(query, [id_guru], (err, result) => {
@@ -100,7 +102,7 @@ app.get('/jadwal', (req, res) => {
   });
 });
 
-app.post('/booking/terima', async (req, res) => {
+router.post('/booking/terima', async (req, res) => {
   const { id, status } = req.body;
   const query = 'UPDATE booking SET status = ? WHERE id = ?';
   db.query(query, [status, id], (err, results) => {
@@ -112,7 +114,7 @@ app.post('/booking/terima', async (req, res) => {
   });
 });
 
-app.post('/booking/selesai', async (req, res) => {
+router.post('/booking/selesai', async (req, res) => {
   const { id, status } = req.body;
   const query = 'UPDATE booking SET status = ? WHERE id = ?';
   db.query(query, [status, id], (err, results) => {
@@ -124,7 +126,7 @@ app.post('/booking/selesai', async (req, res) => {
   });
 });
 
-app.get('/booking', async (req, res) => {
+router.get('/booking', async (req, res) => {
   const { id } = req.body;
   const query = 'SELECT * FROM booking WHERE id_siswa = ?';
   db.query(query, [id], (err, results) => {
@@ -136,7 +138,7 @@ app.get('/booking', async (req, res) => {
   });
 });
 
-app.get('/booking/guru', async (req, res) => {
+router.get('/booking/guru', async (req, res) => {
   const { id, status } = req.body;
   const query = 'SELECT * FROM booking WHERE id_guru = ? AND status = ?';
   db.query(query, [id, status], (err, results) => {
@@ -148,7 +150,7 @@ app.get('/booking/guru', async (req, res) => {
   });
 });
 
-app.get('/booking/guru/riwayat', async (req, res) => {
+router.get('/booking/guru/riwayat', async (req, res) => {
   const { id, status } = req.body;
   const query = 'SELECT * FROM booking WHERE id_guru = ? AND status != ?';
   db.query(query, [id, status], (err, results) => {
@@ -161,7 +163,7 @@ app.get('/booking/guru/riwayat', async (req, res) => {
 });
 
 // Rute untuk login
-app.post('/login', (req, res) => {
+router.post('/login', (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -202,7 +204,7 @@ app.post('/login', (req, res) => {
 
 
 
-app.put('/update', (req, res) => {
+router.put('/update', (req, res) => {
   const { email, nama, alamat, nohp } = req.body;
 
   if (!email || !nama || !alamat || !nohp) {
@@ -225,7 +227,7 @@ app.put('/update', (req, res) => {
   });
 });
 
-app.put('/update/guru', (req, res) => {
+router.put('/update/guru', (req, res) => {
   const { email, nama, alamat, nohp, mata_pelajaran } = req.body;
 
   if (!email || !nama || !alamat || !nohp || !mata_pelajaran) {
@@ -248,7 +250,7 @@ app.put('/update/guru', (req, res) => {
   });
 });
 
-app.get('/user', (req, res) => {
+router.get('/user', (req, res) => {
   const { email } = req.body;
 
   if (!email) {
@@ -271,7 +273,7 @@ app.get('/user', (req, res) => {
   });
 });
 
-app.get('/userid', (req, res) => {
+router.get('/userid', (req, res) => {
   const { id } = req.body;
 
   if (!id) {
@@ -294,7 +296,7 @@ app.get('/userid', (req, res) => {
   });
 });
 
-app.get('/users/guru', (req, res) => {
+router.get('/users/guru', (req, res) => {
   const query = 'SELECT * FROM users WHERE role = ?';
   db.query(query, ['guru'], (err, results) => {
     if (err) {
@@ -306,7 +308,7 @@ app.get('/users/guru', (req, res) => {
   });
 });
 
-app.get('/users/kategori', (req, res) => {
+router.get('/users/kategori', (req, res) => {
   const { mata_pelajaran } = req.body;
   const query = 'SELECT * FROM users WHERE role = ? AND mata_pelajaran = ?';
   db.query(query, ['guru', mata_pelajaran], (err, results) => {
@@ -319,7 +321,7 @@ app.get('/users/kategori', (req, res) => {
   });
 });
 
-app.get('/users/siswa', (req, res) => {
+router.get('/users/siswa', (req, res) => {
   const query = 'SELECT * FROM users WHERE role = ?';
   db.query(query, ['siswa'], (err, results) => {
     if (err) {
@@ -331,16 +333,9 @@ app.get('/users/siswa', (req, res) => {
   });
 });
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'public/');
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname)); // Appending extension
-  }
-});
 
-app.get('/tarif', (req, res) => {
+
+router.get('/tarif', (req, res) => {
 
   const query = 'SELECT * FROM mata_pelajaran';
   db.query(query, (err, results) => {
@@ -353,7 +348,7 @@ app.get('/tarif', (req, res) => {
   });
 });
 
-app.get('/mata_pelajaran', async (req, res) => {
+router.get('/mata_pelajaran', async (req, res) => {
   const query = 'SELECT * FROM mata_pelajaran';
   db.query(query, (err, results) => {
     if (err) {
@@ -366,7 +361,7 @@ app.get('/mata_pelajaran', async (req, res) => {
 
 
 
-app.delete('/mata_pelajaran', (req, res) => {
+router.delete('/mata_pelajaran', (req, res) => {
   const { id } = req.body;
 
   const sql = 'DELETE FROM mata_pelajaran WHERE id = ?';
@@ -380,12 +375,21 @@ app.delete('/mata_pelajaran', (req, res) => {
   });
 });
 
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, 'public'));
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname)); // Appending extension
+  }
+});
+
 const upload = multer({ storage: storage });
 
-app.use('/public', express.static('public'));
+app.use('guruku', express.static(path.join(__dirname, 'public')));
 
 // Endpoint to handle photo upload
-app.post('/upload', upload.single('photo'), async (req, res) => {
+router.post('/upload', upload.single('photo'), async (req, res) => {
   const { email } = req.body;
   const file = req.file;
 
@@ -394,7 +398,7 @@ app.post('/upload', upload.single('photo'), async (req, res) => {
   }
 
   // Assuming you store the photo URL in public directory
-  const photoUrl = `https://pentagonal-crawling-shovel.glitch.me/public/${file.filename}`;
+  const photoUrl = `http://sifodsinterflour.my.id/guruku/files/${file.filename}`;
 
   try {
     // Update foto_profil in users table
@@ -408,7 +412,7 @@ app.post('/upload', upload.single('photo'), async (req, res) => {
   }
 });
 
-app.post('/setmatapelajaran', upload.single('photo'), async (req, res) => {
+router.post('/setmatapelajaran', upload.single('photo'), async (req, res) => {
   const { deskripsi, tarif } = req.body; // Assuming tarif is sent in the body
   const file = req.file;
 
@@ -417,7 +421,7 @@ app.post('/setmatapelajaran', upload.single('photo'), async (req, res) => {
   }
 
   // Assuming you store the photo URL in public directory
-  const photoUrl = `https://pentagonal-crawling-shovel.glitch.me/public/${file.filename}`;
+  const photoUrl = `http://sifodsinterflour.my.id/guruku/files/${file.filename}`;
 
   try {
     // Insert new record
@@ -435,7 +439,7 @@ app.post('/setmatapelajaran', upload.single('photo'), async (req, res) => {
   }
 });
 
-app.post('/update_foto', upload.single('photo'), async (req, res) => {
+router.post('/update_foto', upload.single('photo'), async (req, res) => {
   const { id } = req.body; // Assuming tarif is sent in the body
   const file = req.file;
 
@@ -444,7 +448,7 @@ app.post('/update_foto', upload.single('photo'), async (req, res) => {
   }
 
   // Assuming you store the photo URL in public directory
-  const photoUrl = `https://pentagonal-crawling-shovel.glitch.me/public/${file.filename}`;
+  const photoUrl = `http://sifodsinterflour.my.id/guruku/files/${file.filename}`;
 
   try {
     // Insert new record
@@ -459,7 +463,7 @@ app.post('/update_foto', upload.single('photo'), async (req, res) => {
   }
 });
 
-
+app.use('/guruku',router);
 // Mulai server
 const PORT = 3000;
 

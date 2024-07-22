@@ -79,10 +79,10 @@ class _KategoriState extends State<KategoriSiswa> {
             ? GridView.builder(
                 itemCount: data.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    childAspectRatio: 0.63,
+                    childAspectRatio: 0.75,
                     crossAxisSpacing: 8,
                     mainAxisSpacing: 8,
-                    crossAxisCount: 4),
+                    crossAxisCount: 3),
                 itemBuilder: (context, i) {
                   return Material(
                     elevation: 2,

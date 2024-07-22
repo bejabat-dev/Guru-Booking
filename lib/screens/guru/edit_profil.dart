@@ -78,6 +78,7 @@ class _EditProfilState extends State<EditProfilGuru> {
           for (var map in response.data) {
             values.add(map['deskripsi']);
           }
+          selectedValue = values[0];
         });
       }
     } catch (e) {
@@ -157,7 +158,7 @@ class _EditProfilState extends State<EditProfilGuru> {
                                   color: Colors.black, fontSize: 14),
                               decoration: myDecor(
                                   'Mata Pelajaran', const Icon(Icons.book)),
-                              value: 'default',
+                              value: selectedValue,
                               items: values.map((String value) {
                                 return DropdownMenuItem<String>(
                                   value: value,

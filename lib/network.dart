@@ -6,11 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:guruku/screens/admin/bottomnav.dart';
 import 'package:guruku/screens/auth/forgot.dart';
 import 'package:guruku/screens/home.dart';
+import 'package:guruku/userdetails.dart';
 import 'package:guruku/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Network {
-  final String baseUrl = 'https://pentagonal-crawling-shovel.glitch.me';
+  final String baseUrl = 'http://sifodsinterflour.my.id/guruku';
   final dio = Dio();
 
   late SharedPreferences userData;
@@ -25,6 +26,8 @@ class Network {
       debugPrint(response.statusCode.toString());
       if (response.statusCode == 200) {
         await userData.setBool('loggedin', true);
+
+        await userData.setString('email', email);
         if (context.mounted) await getUserData(context, email);
       }
     } catch (e) {
@@ -62,17 +65,19 @@ class Network {
 
     try {
       final response = await dio.get('$baseUrl/user', data: {'email': email});
-      debugPrint(response.toString());
+      debugPrint('Try : getUserData : ${response.toString()}');
       if (response.statusCode == 200) {
         await userData.setString('data', response.toString());
         await userData.setString('email', email);
         await userData.setInt('id', response.data['id']);
         await userData.setString('nama', response.data['nama']);
+        Userdetails().getToken();
       }
 
       String role = response.data['role'];
 
-      if (role == 'siswa') {
+      if(context.mounted){
+        if (role == 'siswa') {
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => const Home(role: 'siswa')),
@@ -91,8 +96,9 @@ class Network {
                     )),
             (route) => false);
       }
+      }
     } catch (e) {
-      debugPrint(e.toString());
+      debugPrint('getUserData : ${e.toString()}');
     }
   }
 

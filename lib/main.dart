@@ -1,13 +1,15 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:guruku/firebase_options.dart';
 import 'package:guruku/screens/admin/bottomnav.dart';
 import 'package:guruku/screens/admin/edit.dart';
 import 'package:guruku/screens/auth/login.dart';
 
 void main() async {
-  /*WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-  );*/
+  );
 
   runApp(MaterialApp(
       debugShowCheckedModeBanner: false,

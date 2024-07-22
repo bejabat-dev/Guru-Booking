@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class Utils {
+  
+
   void Navigate(BuildContext context, Widget widget) {
     Navigator.push(context, MaterialPageRoute(builder: (context) => widget));
   }

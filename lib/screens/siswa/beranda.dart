@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:guruku/network.dart';
 import 'package:guruku/notifications.dart';
@@ -179,9 +180,11 @@ class _BerandaSiswaState extends State<BerandaSiswa> {
                   ),
                 );
               })
-          : const Center(
-              child: CircularProgressIndicator(),
-            ),
+          : const Column(mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CupertinoActivityIndicator(),SizedBox(height: 5,),Text('Memuat')
+            ],
+          ),
     );
   }
 }

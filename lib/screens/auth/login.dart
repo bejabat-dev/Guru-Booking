@@ -3,6 +3,7 @@ import 'package:guruku/network.dart';
 import 'package:guruku/screens/auth/forgot.dart';
 import 'package:guruku/screens/auth/register.dart';
 import 'package:guruku/styles.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 class Login extends StatefulWidget {
   const Login({super.key});
 
@@ -10,10 +11,18 @@ class Login extends StatefulWidget {
   State<Login> createState() => _LoginState();
 }
 
+void checkLogin(BuildContext context)async{
+  final prefs = await SharedPreferences.getInstance();
+  if(prefs.getBool('loggedin')==true){
+    if(context.mounted)Network().getUserData(context, prefs.getString('email')!);
+  }
+}
+
 class _LoginState extends State<Login> {
   @override
   void initState() {
     super.initState();
+    checkLogin(context);
   }
 
   bool proceed = false;
