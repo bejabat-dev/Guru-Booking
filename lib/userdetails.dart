@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Userdetails{
+  static Map<String,dynamic>? userData;
+  
   static String? email;
+
   Future<void> savePrefs()async{
     final prefs = await SharedPreferences.getInstance();
     prefs.setBool('loggedin', true);
